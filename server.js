@@ -1,20 +1,18 @@
-const http = require('http')
 const fs = require('fs')
-const express = require('express')
-
-const app = express()
-
-const server = http.createServer(app)
+const app = require('express')()
+const server = require('http').createServer(app)
+const io = require('socket.io')(server)
+const ss = require('socket.io-stream')
+const stream = ss.createStream()
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-app.get('/audio', (req, res) => {
-  const fd = fs.openSync('Scripts/input_pipe', 'r')
-  const stream = fs.createReadStream(null, { fd })
-  stream.on('data', (d) => {
-    console.log(d.toString())
+io.on('connection', (socket) => {
+  ss(socket).on('client-stream-request', () => {
+    ss(socket).emit('audio-stream', stream, { name: 'fifo' })
+    fs.createReadStream('Scripts/input_pipe').pipe(stream)
   })
 })
 

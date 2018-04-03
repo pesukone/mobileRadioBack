@@ -8,6 +8,9 @@
   },
   "license": "MIT",
   "dependencies": {
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "player": "^0.6.1",
+    "socket.io": "^2.1.0",
+    "socket.io-stream": "^0.9.1"
   }
 }
